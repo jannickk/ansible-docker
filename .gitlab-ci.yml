@@ -28,8 +28,8 @@ build-docker_ansible_generic:
   stage: build-docker
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build -t $CI_REGISTRY/massflows/devops/ansible/ansible-generic:2.17.2 -f ansible-generic/Dockerfile .
-    - docker push $CI_REGISTRY/massflows/devops/ansible/ansible-generic:2.17.2
+    - docker build -t $CI_REGISTRY/massflows/devops/ansible-docker/ansible-generic:2.17.2 -f ansible-generic/Dockerfile .
+    - docker push $CI_REGISTRY/massflows/devops/ansible-docker/ansible-generic:2.17.2
 
 build-docker_ansible_kubespray:
   tags:
@@ -37,8 +37,8 @@ build-docker_ansible_kubespray:
   stage: build-docker
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY 
-    - docker build -t $CI_REGISTRY/massflows/devops/ansible/ansible-kubespray:2.16.4 -f ansible-kubespray/Dockerfile .
-    - docker push $CI_REGISTRY/massflows/devops/ansible/ansible-kubespray:2.16.4
+    - docker build -t $CI_REGISTRY/massflows/devops/ansible-docker/ansible-kubespray:2.16.4 -f ansible-kubespray/Dockerfile .
+    - docker push $CI_REGISTRY/massflows/devops/ansible-docker/ansible-kubespray:2.16.4
 
 build-docker_ansible_terraform:
   tags:
@@ -46,8 +46,8 @@ build-docker_ansible_terraform:
   stage: build-docker
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY 
-    - docker build -t $CI_REGISTRY/massflows/devops/ansible/ansible-terraform:2.17.2 -f ansible-terraform/Dockerfile .
-    - docker push $CI_REGISTRY/massflows/devops/ansible/ansible-terraform:2.17.2
+    - docker build -t $CI_REGISTRY/massflows/devops/ansible-docker/ansible-terraform:2.17.2 -f ansible-terraform/Dockerfile .
+    - docker push $CI_REGISTRY/massflows/devops/ansible-docker/ansible-terraform:2.17.2
 
 upload_ansbile_generic_docker:
   tags:
