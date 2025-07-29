@@ -20,6 +20,7 @@ RUN mv vault /usr/local/bin/
 RUN pip3 install --upgrade pip; \
     python3 -m pip install ansible-core==${ANSIBLE_VERSION}
 
+
 RUN pip3 install --upgrade pip; \
     python3 -m pip install -r /etc/requirements.txt;\
     ansible-galaxy collection install -r /etc/requirements.yml;\

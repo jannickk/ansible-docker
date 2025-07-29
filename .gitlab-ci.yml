@@ -7,7 +7,9 @@
 # See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
 stages:
 - test
-- build-docker
+- dockerhub
+- gitlab_registry
+
 
 
 variables:
@@ -16,6 +18,24 @@ variables:
   GENERIC_ANSIBLE_VERSION: 2.19.0 
   KUBESPRAY_ANSIBLE_VERSION: 2.16.4
 
+
+.docker_build_gitlab_registry:
+  tags:
+    - docker-build
+  stage: gitlab_registry
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build --build-arg ANSIBLE_VERSION=$ANSIBLE_VERSION -t $CI_REGISTRY/$NAME_SPACE/$IMAGE_NAME:$ANSIBLE_VERSION -f $FOLDER/Dockerfile .
+    - docker push $CI_REGISTRY/$IMAGE_NAME:$ANSIBLE_VERSION
+
+.docker_build:
+  tags:
+    - docker-build
+  stage: dockerhub
+  script:
+    - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD docker.io
+    - docker build --build-arg ANSIBLE_VERSION=$ANSIBLE_VERSION -t docker.io/$NAME_SPACE/$IMAGE_NAME:$IMAGE_TAG -f $FOLDER/Dockerfile .
+    - docker push docker.io/$NAME_SPACE/$IMAGE_NAME:$IMAGE_TAG
 
 sast:
   stage: test
@@ -27,53 +47,71 @@ include:
 build-docker_ansible_generic:
   tags:
     - docker-build
-  stage: build-docker
-  script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build --build-arg ANSIBLE_VERSION=$GENERIC_ANSIBLE_VERSION -t $CI_REGISTRY/massflows/devops/ansible-docker/ansible-generic:$GENERIC_ANSIBLE_VERSION -f ansible-generic/Dockerfile .
-    - docker push $CI_REGISTRY/massflows/devops/ansible-docker/ansible-generic:$GENERIC_ANSIBLE_VERSION
+  stage: gitlab_registry
+  variables:
+    ANSIBLE_VERSION: $GENERIC_ANSIBLE_VERSION
+    NAME_SPACE: massflows/devops/ansible-docker
+    IMAGE_NAME: ansible
+    FOLDER: ansible-generic
+    IMAGE_TAG: $GENERIC_ANSIBLE_VERSION-generic
+  extends: .docker_build_gitlab_registry
 
 build-docker_ansible_kubespray:
   tags:
     - docker-build
-  stage: build-docker
-  script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY 
-    - docker build -t $CI_REGISTRY/massflows/devops/ansible-docker/ansible-kubespray:2.16.14 -f ansible-kubespray/Dockerfile .
-    - docker push $CI_REGISTRY/massflows/devops/ansible-docker/ansible-kubespray:2.16.14
+  stage: gitlab_registry
+  extends: .docker_build_gitlab_registry
+  variables:
+    ANSIBLE_VERSION: $KUBESPRAY_ANSIBLE_VERSION
+    NAME_SPACE: massflows/devops/ansible-docker
+    IMAGE_NAME: ansible
+    FOLDER: ansible-kubespray
+    IMAGE_TAG: $KUBESPRAY_ANSIBLE_VERSION-kubespray
 
 build-docker_ansible_terraform:
   tags:
     - docker-build
-  stage: build-docker
-  script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY 
-    - docker build --build-arg ANSIBLE_VERSION=$GENERIC_ANSIBLE_VERSION -t $CI_REGISTRY/massflows/devops/ansible-docker/ansible-terraform:$GENERIC_ANSIBLE_VERSION -f ansible-terraform/Dockerfile .
-    - docker push $CI_REGISTRY/massflows/devops/ansible-docker/ansible-terraform:$GENERIC_ANSIBLE_VERSION
+  stage: gitlab_registry
+  extends: .docker_build_gitlab_registry
+  variables:
+    ANSIBLE_VERSION: $GENERIC_ANSIBLE_VERSION
+    NAME_SPACE: massflows/devops/ansible-docker
+    IMAGE_NAME: ansible
+    FOLDER: ansible-terraform
+    IMAGE_TAG: $GENERIC_ANSIBLE_VERSION-terraform
 
-upload_ansbile_generic_docker:
+upload_ansible_generic_docker:
   tags:
     - docker-build
-  stage: build-docker
-  script:
-    - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD docker.io
-    - docker build -t docker.io/jannickkappelmann/ansible:2.19.0-generic -f ansible-generic/Dockerfile .
-    - docker push docker.io/jannickkappelmann/ansible:2.19.0-generic
+  stage: dockerhub
+  extends: .docker_build
+  variables:
+    IMAGE_TAG: $GENERIC_ANSIBLE_VERSION-generic
+    NAME_SPACE: jannickkappelmann
+    IMAGE_NAME: ansible
+    FOLDER: ansible-generic
+    ANSIBLE_VERSION: $GENERIC_ANSIBLE_VERSION
 
-upload_ansbile_kubespray_docker:
+upload_ansible_kubespray_docker:
   tags:
     - docker-build
-  stage: build-docker
-  script:
-    - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD docker.io
-    - docker build -t docker.io/jannickkappelmann/ansible:2.16.14-kubespray -f ansible-kubespray/Dockerfile .
-    - docker push docker.io/jannickkappelmann/ansible:2.16.14-kubespray
+  stage: dockerhub
+  extends: .docker_build
+  variables:
+    IMAGE_TAG: $KUBESPRAY_ANSIBLE_VERSION-kubespray
+    NAME_SPACE: jannickkappelmann
+    IMAGE_NAME: ansible
+    FOLDER: ansible-generic
+    ANSIBLE_VERSION: $GENERIC_ANSIBLE_VERSION
 
-upload_ansbile_terraform_docker:
+upload_ansible_terraform_docker:
   tags:
     - docker-build
-  stage: build-docker
-  script:
-    - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD docker.io
-    - docker build -t docker.io/jannickkappelmann/ansible:2.19.0-terraform -f ansible-terraform/Dockerfile .
-    - docker push docker.io/jannickkappelmann/ansible:2.19.0-terraform
+  stage: dockerhub
+  extends: .docker_build
+  variables:
+    IMAGE_TAG: $KUBESPRAY_ANSIBLE_VERSION-terraform
+    NAME_SPACE: jannickkappelmann
+    IMAGE_NAME: ansible
+    FOLDER: ansible-terraform
+    ANSIBLE_VERSION: $GENERIC_ANSIBLE_VERSION
