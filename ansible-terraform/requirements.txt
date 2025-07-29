@@ -1,7 +1,6 @@
 ansible-lint
-ansible-core==2.19.0
 ansible
-netaddr==0.8.0
-kubernetes==25.3.0
+netaddr
+kubernetes
 jmespath
 passlib

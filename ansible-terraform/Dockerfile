@@ -1,5 +1,8 @@
 FROM python:3.13-bullseye
 
+
+ARG ANSIBLE_VERSION
+
 ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8
 
@@ -16,8 +19,8 @@ RUN unzip terraform_1.9.6_linux_amd64.zip
 # Move the terraform binary to a directory in your system's PATH.
 RUN mv terraform /usr/local/bin/
 
-# Verify that Terraform is installed by checking its version:
-RUN terraform version
+RUN pip3 install --upgrade pip; \
+    python3 -m pip install ansible-core==${ANSIBLE_VERSION}
 
 COPY ./ansible-terraform/requirements.txt /etc/requirements.txt
 COPY ./ansible-terraform/requirements.yml /etc/requirements.yml

@@ -13,6 +13,8 @@ stages:
 variables:
   DOCKERHUB_USERNAME: $DOCKERHUB_USERNAME
   DOCKERHUB_PASSWORD: $DOCKERHUB_PASSWORD
+  GENERIC_ANSIBLE_VERSION: 2.19.0 
+  KUBESPRAY_ANSIBLE_VERSION: 2.16.4
 
 
 sast:
@@ -28,8 +30,8 @@ build-docker_ansible_generic:
   stage: build-docker
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build -t $CI_REGISTRY/massflows/devops/ansible-docker/ansible-generic:2.19.0 -f ansible-generic/Dockerfile .
-    - docker push $CI_REGISTRY/massflows/devops/ansible-docker/ansible-generic:2.19.0
+    - docker build --build-arg ANSIBLE_VERSION=$GENERIC_ANSIBLE_VERSION -t $CI_REGISTRY/massflows/devops/ansible-docker/ansible-generic:$GENERIC_ANSIBLE_VERSION -f ansible-generic/Dockerfile .
+    - docker push $CI_REGISTRY/massflows/devops/ansible-docker/ansible-generic:$GENERIC_ANSIBLE_VERSION
 
 build-docker_ansible_kubespray:
   tags:
@@ -46,8 +48,8 @@ build-docker_ansible_terraform:
   stage: build-docker
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY 
-    - docker build -t $CI_REGISTRY/massflows/devops/ansible-docker/ansible-terraform:2.19.0 -f ansible-terraform/Dockerfile .
-    - docker push $CI_REGISTRY/massflows/devops/ansible-docker/ansible-terraform:2.19.0
+    - docker build --build-arg ANSIBLE_VERSION=$GENERIC_ANSIBLE_VERSION -t $CI_REGISTRY/massflows/devops/ansible-docker/ansible-terraform:$GENERIC_ANSIBLE_VERSION -f ansible-terraform/Dockerfile .
+    - docker push $CI_REGISTRY/massflows/devops/ansible-docker/ansible-terraform:$GENERIC_ANSIBLE_VERSION
 
 upload_ansbile_generic_docker:
   tags:
