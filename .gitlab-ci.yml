@@ -28,8 +28,8 @@ build-docker_ansible_generic:
   stage: build-docker
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build -t $CI_REGISTRY/massflows/devops/ansible-docker/ansible-generic:2.17.2 -f ansible-generic/Dockerfile .
-    - docker push $CI_REGISTRY/massflows/devops/ansible-docker/ansible-generic:2.17.2
+    - docker build -t $CI_REGISTRY/massflows/devops/ansible-docker/ansible-generic:2.19.0 -f ansible-generic/Dockerfile .
+    - docker push $CI_REGISTRY/massflows/devops/ansible-docker/ansible-generic:2.19.0
 
 build-docker_ansible_kubespray:
   tags:
@@ -37,8 +37,8 @@ build-docker_ansible_kubespray:
   stage: build-docker
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY 
-    - docker build -t $CI_REGISTRY/massflows/devops/ansible-docker/ansible-kubespray:2.16.4 -f ansible-kubespray/Dockerfile .
-    - docker push $CI_REGISTRY/massflows/devops/ansible-docker/ansible-kubespray:2.16.4
+    - docker build -t $CI_REGISTRY/massflows/devops/ansible-docker/ansible-kubespray:2.16.14 -f ansible-kubespray/Dockerfile .
+    - docker push $CI_REGISTRY/massflows/devops/ansible-docker/ansible-kubespray:2.16.14
 
 build-docker_ansible_terraform:
   tags:
@@ -46,8 +46,8 @@ build-docker_ansible_terraform:
   stage: build-docker
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY 
-    - docker build -t $CI_REGISTRY/massflows/devops/ansible-docker/ansible-terraform:2.17.2 -f ansible-terraform/Dockerfile .
-    - docker push $CI_REGISTRY/massflows/devops/ansible-docker/ansible-terraform:2.17.2
+    - docker build -t $CI_REGISTRY/massflows/devops/ansible-docker/ansible-terraform:2.19.0 -f ansible-terraform/Dockerfile .
+    - docker push $CI_REGISTRY/massflows/devops/ansible-docker/ansible-terraform:2.19.0
 
 upload_ansbile_generic_docker:
   tags:
@@ -55,8 +55,8 @@ upload_ansbile_generic_docker:
   stage: build-docker
   script:
     - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD docker.io
-    - docker build -t docker.io/jannickkappelmann/ansible:2.17.2-generic -f ansible-generic/Dockerfile .
-    - docker push docker.io/jannickkappelmann/ansible:2.17.2-generic
+    - docker build -t docker.io/jannickkappelmann/ansible:2.19.0-generic -f ansible-generic/Dockerfile .
+    - docker push docker.io/jannickkappelmann/ansible:2.19.0-generic
 
 upload_ansbile_kubespray_docker:
   tags:
@@ -64,8 +64,8 @@ upload_ansbile_kubespray_docker:
   stage: build-docker
   script:
     - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD docker.io
-    - docker build -t docker.io/jannickkappelmann/ansible:2.16.4-kubespray -f ansible-kubespray/Dockerfile .
-    - docker push docker.io/jannickkappelmann/ansible:2.16.4-kubespray
+    - docker build -t docker.io/jannickkappelmann/ansible:2.16.14-kubespray -f ansible-kubespray/Dockerfile .
+    - docker push docker.io/jannickkappelmann/ansible:2.16.14-kubespray
 
 upload_ansbile_terraform_docker:
   tags:
@@ -73,5 +73,5 @@ upload_ansbile_terraform_docker:
   stage: build-docker
   script:
     - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD docker.io
-    - docker build -t docker.io/jannickkappelmann/ansible:2.17.2-terraform -f ansible-terraform/Dockerfile .
-    - docker push docker.io/jannickkappelmann/ansible:2.17.2-terraform
+    - docker build -t docker.io/jannickkappelmann/ansible:2.19.0-terraform -f ansible-terraform/Dockerfile .
+    - docker push docker.io/jannickkappelmann/ansible:2.19.0-terraform
