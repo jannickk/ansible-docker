@@ -102,7 +102,7 @@ upload_ansible_kubespray_docker:
     NAME_SPACE: jannickkappelmann
     IMAGE_NAME: ansible
     FOLDER: ansible-generic
-    ANSIBLE_VERSION: $GENERIC_ANSIBLE_VERSION
+    ANSIBLE_VERSION: $KUBESPRAY_ANSIBLE_VERSION
 
 upload_ansible_terraform_docker:
   tags:
@@ -110,7 +110,7 @@ upload_ansible_terraform_docker:
   stage: dockerhub
   extends: .docker_build
   variables:
-    IMAGE_TAG: $KUBESPRAY_ANSIBLE_VERSION-terraform
+    IMAGE_TAG: $GENERIC_ANSIBLE_VERSION-terraform
     NAME_SPACE: jannickkappelmann
     IMAGE_NAME: ansible
     FOLDER: ansible-terraform
