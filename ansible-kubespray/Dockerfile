@@ -1,5 +1,7 @@
 FROM python:3.13-bullseye
 
+ARG ANSIBLE_VERSION
+
 ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8
 
@@ -15,6 +17,8 @@ RUN unzip vault_1.17.5_linux_amd64.zip
 
 RUN mv vault /usr/local/bin/
 
+RUN pip3 install --upgrade pip; \
+    python3 -m pip install ansible-core==${ANSIBLE_VERSION}
 
 RUN pip3 install --upgrade pip; \
     python3 -m pip install -r /etc/requirements.txt;\
