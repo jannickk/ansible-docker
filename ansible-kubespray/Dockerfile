@@ -17,6 +17,10 @@ RUN unzip vault_1.17.5_linux_amd64.zip
 
 RUN mv vault /usr/local/bin/
 
+
+RUN pip3 install --upgrade pip; \
+    python3 -m pip install ansible-core==${ANSIBLE_VERSION} ansible ansible-lint
+
 RUN pip3 install --upgrade pip; \
     python3 -m pip install -r /etc/requirements.txt;\
     ansible-galaxy collection install -r /etc/requirements.yml;\
@@ -24,7 +28,6 @@ RUN pip3 install --upgrade pip; \
     python3 -m pip install -r ~/.ansible/collections/ansible_collections/azure/azcollection/requirements.txt
 
 
-RUN pip3 install --upgrade pip; \
-    python3 -m pip install ansible-core==${ANSIBLE_VERSION} ansible ansible-lint
+
 
 CMD [ "/usr/sbin/init" ]

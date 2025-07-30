@@ -22,14 +22,17 @@ RUN mv terraform /usr/local/bin/
 COPY ./ansible-terraform/requirements.txt /etc/requirements.txt
 COPY ./ansible-terraform/requirements.yml /etc/requirements.yml
 
+
+RUN pip3 install --upgrade pip; \
+    python3 -m pip install ansible-core==${ANSIBLE_VERSION} ansible ansible-lint
+
 RUN pip3 install --upgrade pip; \
     python3 -m pip install -r /etc/requirements.txt;\
     ansible-galaxy collection install -r /etc/requirements.yml;\
     python3 -m pip install -r ~/.ansible/collections/ansible_collections/azure/azcollection/requirements.txt
 
 
-RUN pip3 install --upgrade pip; \
-    python3 -m pip install ansible-core==${ANSIBLE_VERSION} ansible ansible-lint
+
 
 CMD [ "/usr/sbin/init" ]
 
