@@ -1,5 +1,3 @@
-ansible-lint
-ansible
 netaddr
 cryptography
 jinja2
