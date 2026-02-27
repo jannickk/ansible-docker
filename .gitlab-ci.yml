@@ -20,6 +20,8 @@ variables:
 
 
 .docker_build_gitlab_registry:
+  tags:
+    - saas-linux-small-amd64
   image: docker:29
   services:
     - docker:29-dind
@@ -33,6 +35,8 @@ variables:
     - docker push $CI_REGISTRY/$NAME_SPACE/$IMAGE_NAME:$IMAGE_TAG
 
 .docker_build:
+  tags:
+    - saas-linux-small-amd64
   image: docker:29
   services:
     - docker:29-dind
@@ -53,8 +57,6 @@ include:
 - template: Security/SAST.gitlab-ci.yml
 
 build-docker_ansible_generic:
-  tags:
-    - docker-build
   stage: gitlab_registry
   variables:
     ANSIBLE_VERSION: $GENERIC_ANSIBLE_VERSION
@@ -65,8 +67,6 @@ build-docker_ansible_generic:
   extends: .docker_build_gitlab_registry
 
 build-docker_ansible_kubespray:
-  tags:
-    - docker-build
   stage: gitlab_registry
   extends: .docker_build_gitlab_registry
   variables:
@@ -77,8 +77,6 @@ build-docker_ansible_kubespray:
     IMAGE_TAG: $KUBESPRAY_ANSIBLE_VERSION-kubespray
 
 build-docker_ansible_terraform:
-  tags:
-    - docker-build
   stage: gitlab_registry
   extends: .docker_build_gitlab_registry
   variables:
@@ -89,8 +87,6 @@ build-docker_ansible_terraform:
     IMAGE_TAG: $GENERIC_ANSIBLE_VERSION-terraform
 
 upload_ansible_generic_docker:
-  tags:
-    - docker-build
   stage: dockerhub
   extends: .docker_build
   variables:
@@ -101,8 +97,6 @@ upload_ansible_generic_docker:
     ANSIBLE_VERSION: $GENERIC_ANSIBLE_VERSION
 
 upload_ansible_kubespray_docker:
-  tags:
-    - docker-build
   stage: dockerhub
   extends: .docker_build
   variables:
@@ -113,8 +107,6 @@ upload_ansible_kubespray_docker:
     ANSIBLE_VERSION: $KUBESPRAY_ANSIBLE_VERSION
 
 upload_ansible_terraform_docker:
-  tags:
-    - docker-build
   stage: dockerhub
   extends: .docker_build
   variables:
