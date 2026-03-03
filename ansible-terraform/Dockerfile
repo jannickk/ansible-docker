@@ -32,7 +32,5 @@ RUN pip3 install --upgrade pip; \
     python3 -m pip install -r ~/.ansible/collections/ansible_collections/azure/azcollection/requirements.txt
 
 
-
-
 CMD [ "/usr/sbin/init" ]
 
