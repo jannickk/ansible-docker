@@ -11,11 +11,7 @@ USER root
 COPY ./ansible-generic/requirements.txt /etc/requirements.txt
 COPY ./ansible-generic/requirements.yml /etc/requirements.yml
 
-RUN wget https://releases.hashicorp.com/vault/1.17.5/vault_1.17.5_linux_amd64.zip
-
-RUN unzip vault_1.17.5_linux_amd64.zip
-
-RUN mv vault /usr/local/bin/
+RUN wget https://releases.hashicorp.com/vault/1.17.5/vault_1.17.5_linux_amd64.zip && unzip vault_1.17.5_linux_amd64.zip && mv vault /usr/local/bin/
 
 RUN pip3 install --upgrade pip; \
     python3 -m pip install ansible-core==${ANSIBLE_VERSION} ansible ansible-lint
